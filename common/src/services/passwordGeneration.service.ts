@@ -4,6 +4,8 @@ import { EncString } from '../models/domain/encString';
 import { GeneratedPasswordHistory } from '../models/domain/generatedPasswordHistory';
 import { PasswordGeneratorPolicyOptions } from '../models/domain/passwordGeneratorPolicyOptions';
 import { Policy } from '../models/domain/policy';
+import { PCP } from './pcp_data';
+import { check_password } from './pcp_validate';
 
 import { CryptoService } from '../abstractions/crypto.service';
 import {
@@ -47,6 +49,32 @@ export class PasswordGenerationService implements PasswordGenerationServiceAbstr
 
     constructor(private cryptoService: CryptoService, private storageService: StorageService,
         private policyService: PolicyService) { }
+
+    async generatePasswordUsingPCP(pcp: PCP): Promise<string> {
+        const chosen_rules = pcp.rules[await this.cryptoService.randomNumber(0, pcp.rules.length - 1)]
+        const minLength: number = chosen_rules.min_length;
+
+
+
+
+        const charsets = pcp.charsets;
+        return '';
+    }
+
+    async generateAcceptablePasswordUsingPCP(pcp: PCP): Promise<string> {
+        let confirmsToPolicy: boolean = false;
+        let isStrongPassword: boolean = false;
+        let password: string = '';
+        while (!confirmsToPolicy || !isStrongPassword) {
+            password = await this.generatePasswordUsingPCP(pcp);
+
+            confirmsToPolicy = check_password(password, pcp);
+
+            const result = zxcvbn(password);
+            isStrongPassword = result.score > 2;
+        }
+        return password;
+    }
 
     async generatePassword(options: any): Promise<string> {
         // overload defaults with given options

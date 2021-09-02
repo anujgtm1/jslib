@@ -55,7 +55,9 @@
     "@bitwarden/jslib-angular": "file:angular",
     "@bitwarden/jslib-common": "file:common",
     "@bitwarden/jslib-electron": "file:electron",
-    "@bitwarden/jslib-node": "file:node"
+    "@bitwarden/jslib-node": "file:node",
+    "zxcvbn": "^4.4.2"
+
   },
   "engines": {
     "node": "~14",
